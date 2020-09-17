@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 void cmdset(FILE *file_in, FILE *file_out, int text_speed, int window_id){
     fseek(file_in, 0, SEEK_END);
@@ -24,6 +25,25 @@ void cmdset(FILE *file_in, FILE *file_out, int text_speed, int window_id){
                 fprintf(file_out, "xdotool key --window %d --delay %d ",
                         window_id, text_speed);
                 break;
+            case '?':
+                fprintf(file_out, "question ");
+                break;
+            case '!':
+                fprintf(file_out, "exclam ");
+                break;
+            case ' ':
+                fprintf(file_out, "space ");
+                break;
+            case '\\':
+                if (i+3 < length && strncmp(&file_content[i+1], "ESC", 3) == 0){
+                    fprintf(file_out, "0xff1b ");
+                    i+=3;
+                }
+                else {
+                    fprintf(file_out, "0x005c ");
+                }
+                break;
+
             default:
                 fprintf(file_out, "%c ", file_content[i]);
                 break;
